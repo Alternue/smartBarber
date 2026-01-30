@@ -42,6 +42,14 @@
                                                     class="form-check-input" onclick="show_password()">
                                                 <label for="showpassword" class="form-label">Show Password</label>
                                             </div>
+                                            <div class="mt-2">
+                                                <span class="text-muted">Don't have an account?</span>
+                                                <a href="<?= base_url('register') ?>" class="text-primary fw-semibold">
+                                                    Sign Up
+                                                </a>
+                                            </div>
+                            
+                                            
 
                                             <div id="loadingSaving"></div>
                                             <div class="text-end mt-3">
@@ -59,9 +67,12 @@
         </div>
     </main>
 
+    <script src="<?= base_url('public/js/main.js') ?>"></script>
     <script src="<?= base_url('public/js/jquery.js') ?>"></script>
     <script src="<?= base_url('public/js/notyf.min.js') ?>"></script>
     <script>
+
+
         const notyf = new Notyf({
             position: {
                 x: "right",
@@ -79,7 +90,7 @@
         }
 
 
-        $('#submitBtn').on('click', function(e) {
+        $('#submitBtn').on('click', function (e) {
             e.preventDefault();
             const username = $('#username').val()
             const password = $('#password').val()
@@ -100,7 +111,7 @@
                         username: username,
                         password: password
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status === 'success') {
                             notyf.success(response.message)
                             setTimeout(() => {
@@ -110,7 +121,7 @@
                             notyf.error(response.message)
                         }
                     },
-                    error: function() {
+                    error: function () {
                         notyf.error("Terjadi kesalahan pada saat memproses login, Silahkan Coba Lagi")
                     }
                 });

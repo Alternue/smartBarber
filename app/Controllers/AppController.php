@@ -19,7 +19,7 @@ class AppController extends BaseController
     public function index()
     {
         if (session()->has('isLoggedin') === true) {
-            $data['title'] = "Potong rambut cukurukuk";
+            $data['title'] = "Smart Barber";
             $data['username'] = session('username');
             return view('dashboard/user', $data);
         } else {

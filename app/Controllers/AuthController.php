@@ -73,6 +73,86 @@ class AuthController extends BaseController
         }
     }
 
+    public function register()
+    {
+        // hanya menampilkan view register
+        return view('auth/register');
+    }
+
+    public function processRegister()
+    {
+        // transaction cocok untuk register (karena INSERT)
+        $this->db->transBegin();
+
+        try {
+            $username = $this->request->getPost('username');
+            $email    = $this->request->getPost('email');
+            $password = $this->request->getPost('password');
+            $confirm  = $this->request->getPost('confirm_password');
+
+            // validasi dasar
+            if (empty($username) || empty($email) || empty($password) || empty($confirm)) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Semua field wajib diisi'
+                ]);
+            }
+
+            if (!filter_var($email,     FILTER_VALIDATE_EMAIL)) {
+                return $this->response->setJSON([
+                    'status'=> 'error',
+                    'message'=> plain('Format email tidak valid')
+                    ]);
+            }
+
+            if ($password !== $confirm) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Password dan konfirmasi tidak sama'
+                ]);
+            }
+
+            // cek username (pakai model, tanpa ubah login)
+            $checkUser = $this->user
+                ->where('username', $username)
+                ->first();
+
+            if ($checkUser) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Username sudah digunakan'
+                ]);
+            }
+
+            // insert user baru
+            $this->user->insert([
+                'username'    => $username,
+                'email'       => $email,
+                'password'    => md5($password), // sesuai sistem login kamu
+                'role'        => 'pelanggan',
+                'createddate' => date('Y-m-d'),
+                'createdby'   => 'self-register'
+            ]);
+
+            $this->db->transCommit();
+
+            return $this->response->setJSON([
+                'status'   => 'success',
+                'message'  => 'Registrasi berhasil, silakan login',
+                'redirect' => base_url('login')
+            ]);
+
+        } catch (\Exception $e) {
+            $this->db->transRollback();
+
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+
     public function logout()
     {
         session()->destroy();

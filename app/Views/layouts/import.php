@@ -13,7 +13,6 @@
 <!-- =====================
 ==== IMPORT VENDOR JS ===
 ========================== -->
-<script src="<?= base_url('public/js/main.js') ?>"></script>
 <script src="<?= base_url('public/js/notyf.min.js') ?>"></script>
 <script src="<?= base_url('public/js/jquery.js') ?>"></script>
 <script src="<?= base_url('public/js/sweetalert.min.js') ?>"></script>

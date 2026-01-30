@@ -6,28 +6,29 @@ use CodeIgniter\Model;
 
 class UserModel extends Model
 {
-    protected $table = "users";
+    protected $table = 'users';
+    protected $primaryKey = 'id';
 
-    protected $primaryKey = "id";
-
-    protected $allowedField = [
-        "username",
-        "password",
-        "role",
-        "profile_picture",
-        "createddate",
-        "updateddate",
-        "createdby",
-        "updatedby",
-        "email",
+    protected $allowedFields = [
+        'username',
+        'email',
+        'password',
+        'role',
+        'createddate',
+        'updateddate'
     ];
 
+    // ====== LOGIN (JANGAN DIHAPUS) ======
     public function authenticate($username, $password)
     {
-        return $this->db->table('users')
-            ->where('username', $username)
-            ->where('password', $password) // sementara (tanpa hash)
-            ->get()
-            ->getRow(); 
+        return $this->where('username', $username)
+                    ->where('password', md5($password)) // sesuai script temanmu
+                    ->first();
+    }
+
+    // ====== REGISTER ======
+    public function insertUser($data)
+    {
+        return $this->insert($data);
     }
 }
